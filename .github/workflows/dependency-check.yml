@@ -1,0 +1,75 @@
+name: Check Dependency Updates
+
+on:
+  schedule:
+    # 每周一 00:00 UTC (北京时间 08:00) 自动执行
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-updates:
+    name: Check Dependency Updates
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Run Dependency Updates Check
+        run: ./gradlew dependencyUpdates --no-daemon
+
+      - name: Publish Summary to GitHub
+        if: always()
+        run: |
+          REPORT_FILE=$(find build/dependencyUpdates -name "report.txt" 2>/dev/null | head -n 1)
+          if [ -n "$REPORT_FILE" ] && [ -f "$REPORT_FILE" ]; then
+            echo "### 📦 依赖版本更新检查报告" >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+            cat "$REPORT_FILE" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ 未找到 report.txt 报告文件" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload Report Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-updates-report
+          path: build/dependencyUpdates/
+          if-no-files-found: ignore
+
+      - name: Send Report to Telegram
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "::notice::TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is missing. Skipping telegram notification."
+            exit 0
+          fi
+
+          REPORT_FILE=$(find build/dependencyUpdates -name "report.txt" 2>/dev/null | head -n 1)
+          if [ -n "$REPORT_FILE" ] && [ -f "$REPORT_FILE" ]; then
+            curl -s -S -f -F document=@"$REPORT_FILE" \
+                 -F chat_id="$TELEGRAM_CHAT_ID" \
+                 "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" \
+                 -F caption="📦 *smartbedlightcontrol* 依赖版本检查报告" \
+                 -F parse_mode="Markdown" > /dev/null || true
+            echo "✅ 报告已成功推送至 Telegram！"
+          fi
