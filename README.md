@@ -83,7 +83,7 @@ cd smartbedlightcontrol
 
 项目内置了以下自动化工作流：
 1. **[Build and Deploy Release APK](.github/workflows/build-release.yml)**：向 `main` 分支推送或手动触发时，自动编译 Release APK，支持密钥自动签名、Artifacts 归档与 Telegram 文件推送。
-2. **[Check Dependency Updates](.github/workflows/dependency-check.yml)**：每周一定时（00:00 UTC）或手动触发运行，自动扫描项目中所有依赖（AGP、Gradle Wrapper、AndroidX、三方库）的新版本情况，并在 GitHub Step Summary 中直观呈现报告，同时支持报告文件上传与 Telegram 提醒推送。
+2. **[Check Dependency Updates](.github/workflows/dependency-check.yml)**：支持在 GitHub Actions 页面纯手动触发（`workflow_dispatch`），按需扫描项目中所有依赖（AGP、Gradle Wrapper、AndroidX、三方库）的新版本情况，并在 GitHub Step Summary 中直观呈现报告，同时支持报告文件上传与 Telegram 提醒推送。
 
 ### 可选 Secrets 配置
 若需要自动签名及推送至 Telegram 频道/群组，可在 GitHub 仓库的 `Settings -> Secrets and variables -> Actions` 中配置以下变量：

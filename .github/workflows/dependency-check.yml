@@ -1,9 +1,6 @@
 name: Check Dependency Updates
 
 on:
-  schedule:
-    # 每周一 00:00 UTC (北京时间 08:00) 自动执行
-    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 jobs:
