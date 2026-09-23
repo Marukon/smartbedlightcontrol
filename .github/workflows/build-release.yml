@@ -155,11 +155,13 @@ jobs:
           fi
 
           FILE_NAME=$(basename "$APK_PATH")
-          echo "Found APK to upload: $APK_PATH ($FILE_NAME)"
+          echo "Found APK to upload: $FILE_NAME"
 
-          # Send the APK document to Telegram Bot
-          curl -f -F document=@"$APK_PATH" \
+          # Send the APK document to Telegram Bot (silent mode, redirect stdout to /dev/null to prevent leaking channel info)
+          curl -s -S -f -F document=@"$APK_PATH" \
                -F chat_id="$TELEGRAM_CHAT_ID" \
                "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendDocument" \
                -F caption="📱 *${FILE_NAME}* 已经成功编译并打包！" \
-               -F parse_mode="Markdown"
+               -F parse_mode="Markdown" > /dev/null
+
+          echo "✅ 成功推送至 Telegram！"
