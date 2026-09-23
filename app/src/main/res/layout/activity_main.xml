@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/bg_main">
+
+  <TextView
+      android:id="@+id/tvStatus"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:text="状态: 未连接"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      android:textColor="@color/text_primary" />
+
+  <Button
+      android:id="@+id/btnConnect"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:text="连接设备"
+      android:backgroundTint="@color/btn_connect_bg"
+  android:textColor="@color/text_button" />
+
+  <Button
+      android:id="@+id/btnDisconnect"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="断开连接"
+      android:backgroundTint="@color/btn_disconnect_bg"
+  android:textColor="@color/text_button" />
+
+  <Space
+      android:layout_width="match_parent"
+      android:layout_height="50dp" />
+
+  <Button
+      android:id="@+id/btnToggleLight0502"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="24dp"
+      android:text="打开床底灯（一次）"
+      android:backgroundTint="@color/btn_toggle_bg"
+  android:textColor="@color/text_button" />
+
+  <Button
+      android:id="@+id/btnKeepLightOn"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:text="打开床底灯（持续）"
+      android:backgroundTint="@color/btn_keep_on_bg"
+  android:textColor="@color/text_button" />
+
+  <TextView
+      android:id="@+id/tvCountdown"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="14dp"
+      android:text="本轮开灯时间还剩下 --:--"
+      android:textSize="16sp"
+      android:textStyle="bold"
+      android:textColor="@color/text_countdown" />
+
+</LinearLayout>
