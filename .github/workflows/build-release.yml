@@ -129,13 +129,6 @@ jobs:
           echo "apk_path=${DEST_PATH}" >> $GITHUB_OUTPUT
           echo "apk_name=${NEW_NAME}" >> $GITHUB_OUTPUT
 
-      - name: Upload APK to GitHub Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ steps.prepare_apk.outputs.apk_name }}
-          path: ${{ steps.prepare_apk.outputs.apk_path }}
-          if-no-files-found: error
-
       - name: Upload to Telegram
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
